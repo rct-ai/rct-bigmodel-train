@@ -219,6 +219,32 @@ def process_dulemon_self_data():
                     texts = {'text': template_}
                     w_f.write(json.dumps(texts, ensure_ascii=False)+'\n')
 
+def process_lccd_data():
+    data_path = '../data/LCCD.json'
+    save_path = '../data/processed/LCCD.jsonl'
+    all_data = []
+    template = "以下是两个人物的对话：\n\n{0}"
+    with open(data_path, 'r', encoding='utf8') as f, open(save_path, 'w', encoding='utf8') as w_f:
+        data_train = json.load(f)
+        for datas in data_train:
+            p1_utterance = []
+            p2_utterance = []
+            for i, sen in enumerate(datas):
+                if i % 2 == 0:
+                    sentence = 'P1："{0}"'.format(''.join(sen.split(' '))) + '\n'
+                    p1_utterance.append(sentence)
+                else:
+                    sentence = 'P2："{0}"'.format(''.join(sen.split(' '))) + '\n'
+                    p2_utterance.append(sentence)
+            # 交叉合并两个列表
+            sentences = list(itertools.chain(*zip(p1_utterance, p2_utterance)))
+            sentences_str = ''.join(sentences)
+            sentences_str = sentences_str.strip()
+
+            template_ = template.format(sentences_str)
+            texts = {'text': template_}
+            w_f.write(json.dumps(texts, ensure_ascii=False) + '\n')
+
 def _util_for_dulemon_self(persona_list, is_train=False):
     """
     将list转换为 str
@@ -237,5 +263,6 @@ def _util_for_dulemon_self(persona_list, is_train=False):
 if __name__ == '__main__':
     # process_emotion_c3kg_data()
     # process_theirs_data()
-    process_duconv_data()
+    # process_duconv_data()
     # process_dulemon_self_data()
+    process_lccd_data()
