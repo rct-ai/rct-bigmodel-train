@@ -12,29 +12,86 @@ import uuid
 import subprocess
 import threading
 # import oss2
+import signal
 import time
 app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template('index.html')
 
+params={
+    "7B1":{"model_params":"7B1","GPUS_PER_NODE":"4","NNODES":"1","PP_SIZE":"4","TP_SIZE":"4","NLAYERS":"30","NHIDDEN":"4096","NHEADS":"32","SEQ_LEN":"2048"},
+    "1B7":{"model_params":"1B7","GPUS_PER_NODE":"2","NNODES":"1","PP_SIZE":"2","TP_SIZE":"2","NLAYERS":"24","NHIDDEN":"2048","NHEADS":"16","SEQ_LEN":"2048"},
+    "3B":{"model_params":"3B","GPUS_PER_NODE":"4","NNODES":"1","PP_SIZE":"4","TP_SIZE":"4","NLAYERS":"30","NHIDDEN":"2560","NHEADS":"32","SEQ_LEN":"2048"}
+}
+
+all_popen={
+
+}
+
+def check_popen():
+    global  all_popen
+    other_popen={}
+    print(all_popen)
+    for key,pop in all_popen.items():
+        print("returncode",pop.returncode)
+        if pop.poll() is  None:
+            # print(f"task {key} has terminated")
+            other_popen.update({key:pop})
+    all_popen=other_popen
+    print(all_popen)
+
+@app.route("/task/terminate", methods=["POST"])
+def terminate_task_text():
+    global  all_popen
+    check_popen()
+    data_name = request.form.get("data_name", "test")
+    model_params =request.form.get("model_params","1B7")
+    if f"{data_name}_{model_params}" not in all_popen:
+        return jsonify({"error": f"{data_name}_{model_params} already terminated or not online"}), 200
+    all_popen[f"{data_name}_{model_params}"].terminate()
+    all_popen[f"{data_name}_{model_params}"].wait()
+    os.killpg(all_popen[f"{data_name}_{model_params}"].pid, signal.SIGTERM)
+    return jsonify({"message": f"{data_name}_{model_params}  terminated ","status":"success"}), 200
+
+
 
 @app.route("/task/create", methods=["POST"])
 def create_task_text():
+    global all_popen
     json_data=request.get_json()
-    device=get_available_gpu()
-    print("available_gpu:",device)
-    if len(device)<2:
-        return jsonify({"error":"not enough gpus"}),500
+    check_popen()
     if "data_name" not in json_data:
         return jsonify({"error":"please provide a valid data_name"}),500
     # if "load_from_name" not in json_data:
     #     return jsonify({"error":"please provide a valid load_from_name"}),500
     data_name=json_data.get("data_name")
     load_from_name=json_data.get("load_from_name","main")
+    model_params=json_data.get("model_params","1B7")
+    SAVE_INTERVAL=str(json_data.get("SAVE_INTERVAL",250))
+    TRAIN_SAMPLES=json_data.get("TRAIN_SAMPLES","100_000")
+    LR_DECAY_SAMPLES=json_data.get("LR_DECAY_SAMPLES","8_000")
+    LR_WARMUP_SAMPLES=json_data.get("LR_WARMUP_SAMPLES","2_000")
+    eval_interval=str(json_data.get("eval_interval",1000))
+    if model_params not in ["1B7","3B","7B1"]:
+        return jsonify({"error": "please provide a valid model_params"}), 500
+    if f"{data_name}_{model_params}" in all_popen:
+        return  jsonify({"error": f"task for {data_name} with {model_params} is processing ,please create an another task"}), 500
+    device=get_available_gpu(model_params)
+    print("available_gpu:",device)
+    GPUS_PER_NODE=int(params[model_params]["GPUS_PER_NODE"])
+
+    if len(device)<GPUS_PER_NODE:
+        return jsonify({"error":"not enough gpus"}),500
     port=getPort()
-    cmd=f"bash run_train_fp16.sh {data_name} {load_from_name} {port}"
-    popen = subprocess.Popen(cmd,env={"CUDA_VISIBLE_DEVICES":",".join(device[:2])}, shell=True)
+    cmd=f"bash run_train_param.sh {data_name} {load_from_name} {port}"
+    env={"CUDA_VISIBLE_DEVICES":",".join(device[:GPUS_PER_NODE])}
+    env.update(params[model_params])
+    env.update({"SAVE_INTERVAL":SAVE_INTERVAL,"TRAIN_SAMPLES":TRAIN_SAMPLES,"LR_DECAY_SAMPLES":LR_DECAY_SAMPLES,"LR_WARMUP_SAMPLES":LR_WARMUP_SAMPLES,"eval_interval":eval_interval})
+
+    popen = subprocess.Popen(cmd,env=env, shell=True)
+
+    all_popen[f"{data_name}_{model_params}"]=popen
     return jsonify({"status":"success","message":f"task for data {data_name} created"}), 200
 
 @app.route("/data/get", methods=["GET"])
@@ -94,12 +151,24 @@ def upload_img():
 
 @app.route("/task/get", methods=["GET"])
 def get_status():
+    check_popen()
     data_name = request.form.get("data_name", "test")
+    model_params =request.form.get("model_params","1B7")
     try:
-        data=get_status_log(data_name)
+        data=get_status_log(data_name,model_params)
     except Exception as e:
         return jsonify({"status":"failed","message":str(e)}),500
-    return jsonify({"status": "success", "message": f"目前已完成{data[1]}中的{data[0]}轮"}), 200
+    if f"{data_name}_{model_params}" in all_popen:
+        return jsonify({"status": "success", "message": f"目前已完成{data[1]}中的{data[0]}轮","subprocess status":"online"}), 200
+    else:
+        return jsonify({"status": "success", "message": f"目前已完成{data[1]}中的{data[0]}轮","subprocess status":"offline"}), 200
+
+@app.route("/alltask/get", methods=["GET"])
+def get_all_status():
+    check_popen()
+    global all_popen
+    all_keys=list(all_popen.keys())
+    return jsonify({"tasks":all_keys}),200
 
 
 
@@ -143,14 +212,17 @@ def get_cuda_properties():
         info[i]={"allocated":meminfo.used / 1024**2,"all":meminfo.total / 1024**2,"free":meminfo.free / 1024**2}
     return info
 #
-def get_available_gpu():
+def get_available_gpu(model_params):
     info=get_cuda_properties()
     print(info)
-    available_gpu=[str(i) for i,j in info.items() if j["free"]>21000]
+    model_params_consume = {"1B7": 24955, "3B": 23092, "7B1": 48354}
+    available_gpu=[str(i) for i,j in info.items() if j["free"]>model_params_consume[model_params]]
     return available_gpu
 
-def get_status_log(data_name):
-    LOG_PATH=f"/data/pengjun/Megatron-DeepSpeed/checkpoints/tr11b-1B3-ml/tr11f-1B3-ml-logs/logs/{data_name}/main_log.txt"
+def get_status_log(data_name,model_params):
+    LOG_PATH=f"/data/pengjun/Megatron-DeepSpeed/checkpoints/tr11b-{model_params}-ml/tr11f-{model_params}-ml-logs/logs/{data_name}/main_log.txt"
+    if not os.path.exists(LOG_PATH):
+        return 0,0
     with open(LOG_PATH,"r") as f:
         data=f.readlines()[::-1]
         for text in data:

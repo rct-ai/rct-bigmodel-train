@@ -1,4 +1,20 @@
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/root/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/root/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/root/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/root/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+conda activate ds
 
+which python
 six_ALL_CCFRWORK=/data/cache
 export TRANSFORMERS_CACHE=$six_ALL_CCFRWORK/models
 export HF_DATASETS_CACHE=$six_ALL_CCFRWORK/datasets
@@ -8,10 +24,12 @@ export HF_DATASETS_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 
 
-variant=test2
-DATA_OUTPUT_PATH=/data/pengjun/Megatron-DeepSpeed/checkpoints/tr11b-7B1-ml
+variant=$1
+load_varient=$2
+DATA_OUTPUT_PATH=/data/pengjun/Megatron-DeepSpeed/checkpoints/tr11b-$model_params-ml
+LOAD_CHECKPOINT_PATH=$DATA_OUTPUT_PATH/checkpoints/$load_varient
 CHECKPOINT_PATH=$DATA_OUTPUT_PATH/checkpoints/$variant
-REPO_PATH=$DATA_OUTPUT_PATH/tr11f-7B1-ml-logs
+REPO_PATH=$DATA_OUTPUT_PATH/tr11f-$model_params-ml-logs
 TENSORBOARD_PATH=$REPO_PATH/tensorboard/$variant
 LOGS_PATH=$REPO_PATH/logs/$variant
 mkdir -p $LOGS_PATH
@@ -20,44 +38,39 @@ MEGATRON_DEEPSPEED_REPO=/data/pengjun/Megatron-DeepSpeed
 cd $MEGATRON_DEEPSPEED_REPO
 
 BIGSCIENCE_REPO=/data/pengjun/bigscience
-TRAIN_DATA_PATH=$MEGATRON_DEEPSPEED_REPO/data/train-splits-7B1.txt
-VALID_DATA_PATH=$MEGATRON_DEEPSPEED_REPO/data/valid-splits-7B1.txt
+TRAIN_DATA_PATH=$MEGATRON_DEEPSPEED_REPO/data/train-splits-$variant.txt
+VALID_DATA_PATH=$MEGATRON_DEEPSPEED_REPO/data/valid-splits-$variant.txt
 CATALOGUE_JSON_PATH=$MEGATRON_DEEPSPEED_REPO/preprocess_data/$variant.json
 LOAD_RATIOS_SCRIPT=$BIGSCIENCE_REPO/data/catalogue/load_ratios_meg_ds_format.py
-python $LOAD_RATIOS_SCRIPT --dataset-ratios-path $CATALOGUE_JSON_PATH --split train --output-meg-ds-ratio-file $TRAIN_DATA_PATH
-python $LOAD_RATIOS_SCRIPT --dataset-ratios-path $CATALOGUE_JSON_PATH --split valid --output-meg-ds-ratio-file $VALID_DATA_PATH
+/root/miniconda3/envs/ds/bin/python $LOAD_RATIOS_SCRIPT --dataset-ratios-path $CATALOGUE_JSON_PATH --split train --output-meg-ds-ratio-file $TRAIN_DATA_PATH
+/root/miniconda3/envs/ds/bin/python $LOAD_RATIOS_SCRIPT --dataset-ratios-path $CATALOGUE_JSON_PATH --split valid --output-meg-ds-ratio-file $VALID_DATA_PATH
 
 TOKENIZER_NAME_OR_PATH=/data/pengjun/Megatron-DeepSpeed/byte-level-bpe-tokenizer-no-norm-250k-whitespace-and-eos-regex-alpha-v3-dedup-lines-articles
 
-
-
-GPUS_PER_NODE=4
-NNODES=1
-
-PP_SIZE=4
-TP_SIZE=4
-
+# N_GPUS=1
 MICRO_BATCH_SIZE=1
 GLOBAL_BATCH_SIZE=512
-
-NLAYERS=30
-NHIDDEN=4096
-NHEADS=32
-SEQ_LEN=2048
-
+# NNODES=1
+# TP_SIZE=2
+# PP_SIZE=2
+# GPUS_PER_NODE=2
 
 
+# NLAYERS=24
+# NHIDDEN=2048
+# NHEADS=16
+# SEQ_LEN=2048
 
 
 MASTER_ADDR=localhost
-MASTER_PORT=6002
+MASTER_PORT=$3
 
-SAVE_INTERVAL=1
+# SAVE_INTERVAL=250
 
-TRAIN_SAMPLES=100_000
+# TRAIN_SAMPLES=100_000
 
-LR_DECAY_SAMPLES=8_000  # Decay for the first 410B tokens then continue at fixed --min-lr
-LR_WARMUP_SAMPLES=2_000  # 375M tokens
+# LR_DECAY_SAMPLES=80_000  # Decay for the first 410B tokens then continue at fixed --min-lr
+# LR_WARMUP_SAMPLES=20_000  # 375M tokens
 
 OPTIMIZER_ARGS=" \
     --optimizer adam \
@@ -106,7 +119,7 @@ GPT_ARGS=" \
 OUTPUT_ARGS=" \
     --log-interval 1 \
     --save-interval $SAVE_INTERVAL \
-    --eval-interval 1000 \
+    --eval-interval $eval_interval \
     --eval-iters 1 \
     --tensorboard-dir $TENSORBOARD_PATH \
     --tensorboard-queue-size 5 \
@@ -117,7 +130,8 @@ OUTPUT_ARGS=" \
 
 ZERO_STAGE=0 # important: bf16 must use z0! it implements its own zero stage 1 equivalent
 
-config_json="./ds_config_1.json"
+config_json="./preprocess_data/config/$variant.json"
+echo $config_json
 
 # Deepspeed figures out GAS dynamically from dynamic GBS via set_train_batch_size()
 cat <<EOT > $config_json
@@ -149,7 +163,7 @@ DEEPSPEED_ARGS=" \
     --deepspeed-activation-checkpointing \
     "
 
-export LAUNCHER="python -u -m torch.distributed.run \
+export LAUNCHER="/root/miniconda3/envs/ds/bin/python -u -m torch.distributed.run \
     --nproc_per_node $GPUS_PER_NODE \
     --nnodes $NNODES \
     --rdzv_endpoint $MASTER_ADDR:$MASTER_PORT \
@@ -165,7 +179,7 @@ export CMD=" \
     $GPT_ARGS \
     $OUTPUT_ARGS \
     --save $CHECKPOINT_PATH \
-    --load $CHECKPOINT_PATH \
+    --load $LOAD_CHECKPOINT_PATH \
     --train-weighted-split-paths-path $TRAIN_DATA_PATH \
     --valid-weighted-split-paths-path $VALID_DATA_PATH \
     --data-impl mmap \

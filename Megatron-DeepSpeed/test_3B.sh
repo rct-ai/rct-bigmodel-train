@@ -9,9 +9,9 @@ export TRANSFORMERS_OFFLINE=1
 
 
 variant=test2
-DATA_OUTPUT_PATH=/data/pengjun/Megatron-DeepSpeed/checkpoints/tr11b-2B5-ml
+DATA_OUTPUT_PATH=/data/pengjun/Megatron-DeepSpeed/checkpoints/tr11b-3B-ml
 CHECKPOINT_PATH=$DATA_OUTPUT_PATH/checkpoints/$variant
-REPO_PATH=$DATA_OUTPUT_PATH/tr11f-2B5-ml-logs
+REPO_PATH=$DATA_OUTPUT_PATH/tr11f-3B-ml-logs
 TENSORBOARD_PATH=$REPO_PATH/tensorboard/$variant
 LOGS_PATH=$REPO_PATH/logs/$variant
 mkdir -p $LOGS_PATH
@@ -20,8 +20,8 @@ MEGATRON_DEEPSPEED_REPO=/data/pengjun/Megatron-DeepSpeed
 cd $MEGATRON_DEEPSPEED_REPO
 
 BIGSCIENCE_REPO=/data/pengjun/bigscience
-TRAIN_DATA_PATH=$MEGATRON_DEEPSPEED_REPO/data/train-splits-2B5.txt
-VALID_DATA_PATH=$MEGATRON_DEEPSPEED_REPO/data/valid-splits-2B5.txt
+TRAIN_DATA_PATH=$MEGATRON_DEEPSPEED_REPO/data/train-splits-3B.txt
+VALID_DATA_PATH=$MEGATRON_DEEPSPEED_REPO/data/valid-splits-3B.txt
 CATALOGUE_JSON_PATH=$MEGATRON_DEEPSPEED_REPO/preprocess_data/$variant.json
 LOAD_RATIOS_SCRIPT=$BIGSCIENCE_REPO/data/catalogue/load_ratios_meg_ds_format.py
 python $LOAD_RATIOS_SCRIPT --dataset-ratios-path $CATALOGUE_JSON_PATH --split train --output-meg-ds-ratio-file $TRAIN_DATA_PATH
@@ -55,8 +55,8 @@ SAVE_INTERVAL=1
 
 TRAIN_SAMPLES=100_000
 
-LR_DECAY_SAMPLES=80_000  # Decay for the first 410B tokens then continue at fixed --min-lr
-LR_WARMUP_SAMPLES=20_000  # 375M tokens
+LR_DECAY_SAMPLES=8_000  # Decay for the first 410B tokens then continue at fixed --min-lr
+LR_WARMUP_SAMPLES=2_000  # 375M tokens
 
 OPTIMIZER_ARGS=" \
     --optimizer adam \
