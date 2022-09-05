@@ -43,6 +43,7 @@ class DeepSpeedCheckpoint(object):
         self.zero_files = get_files_with_prefix(self.file_list, ZERO_FILE_PREFIX)
         self.layer_files = get_files_with_prefix(self.file_list, LAYER_FILE_PREFIX)
         self.mp_rank_files = get_files_with_prefix(self.file_list, MODEL_FILE_PREFIX)
+        print(self.mp_rank_files,self.layer_files,self.zero_files)
 
         self.layer_keys = self._get_layer_keys()
         self.layer_count = len(self.layer_keys)
@@ -50,6 +51,7 @@ class DeepSpeedCheckpoint(object):
             get_files_with_prefix(self.layer_files,
                                   f'{LAYER_FILE_PREFIX}01'))
         self.original_pp_degree = len(self.mp_rank_files) // self.original_tp_degree
+        print(self.original_pp_degree,self.original_tp_degree)
         self.original_dp_degree = max(
             1,
             len(self.zero_files) // (self.original_pp_degree * self.original_tp_degree))
