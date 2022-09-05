@@ -92,6 +92,7 @@ def _save_checkpoint(file_path, chkpt_sd):
 def _renest_sd(sd):
     new_sd = OrderedDict()
     for key, value in sd.items():
+        print(key)
         a, b = key.split('.')
         new_sd[a] = {b: value}
     return new_sd
@@ -107,6 +108,7 @@ def _create_rank_checkpoint(ds_checkpoint,
     meg_embedding_for_head_sd = OrderedDict()
 
     transformer_sd = ds_checkpoint.get_transformer_state(tp_index, pp_index)
+    # print(transformer_sd,ds_checkpoint)
     meg_encoder_sd.update(_convert_ds_transformer_state(transformer_sd))
 
     if pp_index in [0, ds_checkpoint.pp_degree - 1]:

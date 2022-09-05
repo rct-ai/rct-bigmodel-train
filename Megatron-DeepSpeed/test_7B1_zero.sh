@@ -8,10 +8,10 @@ export HF_DATASETS_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 
 
-variant=main2
-DATA_OUTPUT_PATH=/data/pengjun/Megatron-DeepSpeed/checkpoints/tr11b-3B-ml
-CHECKPOINT_PATH=$DATA_OUTPUT_PATH/checkpoints/$variant
-REPO_PATH=$DATA_OUTPUT_PATH/tr11f-3B-ml-logs
+variant=main
+DATA_OUTPUT_PATH=/data/pengjun/Megatron-DeepSpeed/checkpoints/tr11b-7B1-ml
+CHECKPOINT_PATH=$DATA_OUTPUT_PATH/checkpoints/main
+REPO_PATH=$DATA_OUTPUT_PATH/tr11f-7B1-ml-logs
 TENSORBOARD_PATH=$REPO_PATH/tensorboard/$variant
 LOGS_PATH=$REPO_PATH/logs/$variant
 mkdir -p $LOGS_PATH
@@ -20,9 +20,9 @@ MEGATRON_DEEPSPEED_REPO=/data/pengjun/Megatron-DeepSpeed
 cd $MEGATRON_DEEPSPEED_REPO
 
 BIGSCIENCE_REPO=/data/pengjun/bigscience
-TRAIN_DATA_PATH=$MEGATRON_DEEPSPEED_REPO/data/train-splits-3B.txt
-VALID_DATA_PATH=$MEGATRON_DEEPSPEED_REPO/data/valid-splits-3B.txt
-CATALOGUE_JSON_PATH=$MEGATRON_DEEPSPEED_REPO/preprocess_data/test2.json
+TRAIN_DATA_PATH=$MEGATRON_DEEPSPEED_REPO/data/train-splits-7B1.txt
+VALID_DATA_PATH=$MEGATRON_DEEPSPEED_REPO/data/valid-splits-7B1.txt
+CATALOGUE_JSON_PATH=$MEGATRON_DEEPSPEED_REPO/preprocess_data/theme_intent.json
 LOAD_RATIOS_SCRIPT=$BIGSCIENCE_REPO/data/catalogue/load_ratios_meg_ds_format.py
 python $LOAD_RATIOS_SCRIPT --dataset-ratios-path $CATALOGUE_JSON_PATH --split train --output-meg-ds-ratio-file $TRAIN_DATA_PATH
 python $LOAD_RATIOS_SCRIPT --dataset-ratios-path $CATALOGUE_JSON_PATH --split valid --output-meg-ds-ratio-file $VALID_DATA_PATH
@@ -41,9 +41,10 @@ MICRO_BATCH_SIZE=1
 GLOBAL_BATCH_SIZE=512
 
 NLAYERS=30
-NHIDDEN=2560
+NHIDDEN=4096
 NHEADS=32
 SEQ_LEN=2048
+
 
 
 
@@ -100,7 +101,8 @@ GPT_ARGS=" \
     $OPTIMIZER_ARGS \
     $EXIT_OPTS \
     "
-    # --universal-checkpoint \
+
+
 OUTPUT_ARGS=" \
     --log-interval 1 \
     --save-interval $SAVE_INTERVAL \
@@ -113,7 +115,7 @@ OUTPUT_ARGS=" \
     --log-validation-ppl-to-tensorboard \
     "
 
-ZERO_STAGE=0 # important: bf16 must use z0! it implements its own zero stage 1 equivalent
+ZERO_STAGE=3 # important: bf16 must use z0! it implements its own zero stage 1 equivalent
 
 config_json="./ds_config_1.json"
 
@@ -124,7 +126,11 @@ cat <<EOT > $config_json
   "train_batch_size": $GLOBAL_BATCH_SIZE,
   "gradient_clipping": 1.0,
   "zero_optimization": {
-    "stage": $ZERO_STAGE
+        "stage": 3,
+        "overlap_comm": true,
+        "contiguous_gradients": true,
+        "sub_group_size": 1e14,
+        "stage3_gather_fp16_weights_on_model_save": true
   },
   "fp16": {
     "enabled": true,
@@ -159,7 +165,7 @@ export LAUNCHER="python -u -m torch.distributed.run \
 export CMD=" \
     `pwd`/pretrain_gpt.py \
     --tensor-model-parallel-size $TP_SIZE \
-    --pipeline-model-parallel-size $PP_SIZE \
+
     $GPT_ARGS \
     $OUTPUT_ARGS \
     --save $CHECKPOINT_PATH \
@@ -170,6 +176,8 @@ export CMD=" \
     --distributed-backend nccl \
      $DEEPSPEED_ARGS \
     "
+
+#    --pipeline-model-parallel-size $PP_SIZE \
 
 echo $CMD
 

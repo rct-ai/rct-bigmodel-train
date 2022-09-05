@@ -152,4 +152,5 @@ upload_data
 data
 checkpoints
 byte-level-bpe-tokenizer-no-norm-250k-whitespace-and-eos-regex-alpha-v3-dedup-lines-articles
-preprocess_data
+/preprocess_data
+!preprocess_data/model_config
