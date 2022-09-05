@@ -1,0 +1,51 @@
+[2022-08-31 03:57:35,564] [WARNING] [runner.py:159:fetch_hostfile] Unable to find hostfile, will proceed with training with local resources only.
+[2022-08-31 03:57:36,366] [INFO] [runner.py:457:main] cmd = /root/miniconda3/envs/ds/bin/python -u -m deepspeed.launcher.launch --world_info=eyJsb2NhbGhvc3QiOiBbMCwgMSwgMiwgMywgNCwgNSwgNiwgN119 --master_addr=127.0.0.1 --master_port=29500 scripts/inference/bloom-ds-inference.py --name /data/pengjun/model_ckpt/bloom --batch_size 64 --benchmark
+[2022-08-31 03:57:37,387] [INFO] [launch.py:103:main] WORLD INFO DICT: {'localhost': [0, 1, 2, 3, 4, 5, 6, 7]}
+[2022-08-31 03:57:37,387] [INFO] [launch.py:109:main] nnodes=1, num_local_procs=8, node_rank=0
+[2022-08-31 03:57:37,387] [INFO] [launch.py:122:main] global_rank_mapping=defaultdict(<class 'list'>, {'localhost': [0, 1, 2, 3, 4, 5, 6, 7]})
+[2022-08-31 03:57:37,387] [INFO] [launch.py:123:main] dist_world_size=8
+[2022-08-31 03:57:37,387] [INFO] [launch.py:125:main] Setting CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+[2022-08-31 03:57:38,870] [INFO] [comm.py:423:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+*** Loading the model /data/pengjun/model_ckpt/bloom
+[2022-08-31 03:57:41,526] [INFO] [utils.py:827:see_memory_usage] pre-from-pretrained
+[2022-08-31 03:57:41,526] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2022-08-31 03:57:41,526] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 11.07 GB, percent = 1.0%
+[2022-08-31 03:57:41,657] [INFO] [utils.py:827:see_memory_usage] post-from-pretrained
+[2022-08-31 03:57:41,657] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2022-08-31 03:57:41,658] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 10.97 GB, percent = 1.0%
+[2022-08-31 03:57:41,715] [INFO] [utils.py:827:see_memory_usage] post-init-ds-zero-init
+[2022-08-31 03:57:41,716] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2022-08-31 03:57:41,716] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 11.05 GB, percent = 1.0%
+False
+Traceback (most recent call last):
+  File "scripts/inference/bloom-ds-inference.py", line 84, in get_checkpoint_files
+    resolved_archive_file = cached_path(archive_file, cache_dir=cache_dir, local_files_only=local_files_only,)
+  File "/root/miniconda3/envs/ds/lib/python3.8/site-packages/transformers/utils/hub.py", line 284, in cached_path
+    output_path = get_from_cache(
+  File "/root/miniconda3/envs/ds/lib/python3.8/site-packages/transformers/utils/hub.py", line 556, in get_from_cache
+    raise EntryNotFoundError(
+transformers.utils.hub.EntryNotFoundError: Cannot find the requested file (pytorch_model.bin) in the cached path and outgoing traffic has been disabled. To enable model look-ups and downloads online, set 'local_files_only' to False.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "scripts/inference/bloom-ds-inference.py", line 180, in <module>
+    write_checkponts_json()
+  File "scripts/inference/bloom-ds-inference.py", line 168, in write_checkponts_json
+    checkpoint_files = get_checkpoint_files(model_name)
+  File "scripts/inference/bloom-ds-inference.py", line 95, in get_checkpoint_files
+    resolved_archive_file = cached_path(
+  File "/root/miniconda3/envs/ds/lib/python3.8/site-packages/transformers/utils/hub.py", line 284, in cached_path
+    output_path = get_from_cache(
+  File "/root/miniconda3/envs/ds/lib/python3.8/site-packages/transformers/utils/hub.py", line 556, in get_from_cache
+    raise EntryNotFoundError(
+transformers.utils.hub.EntryNotFoundError: Cannot find the requested file (pytorch_model.bin.index.json) in the cached path and outgoing traffic has been disabled. To enable model look-ups and downloads online, set 'local_files_only' to False.
+[2022-08-31 03:57:42,427] [INFO] [launch.py:178:sigkill_handler] Killing subprocess 5359
+[2022-08-31 03:57:42,427] [INFO] [launch.py:178:sigkill_handler] Killing subprocess 5360
+[2022-08-31 03:57:42,427] [INFO] [launch.py:178:sigkill_handler] Killing subprocess 5361
+[2022-08-31 03:57:42,427] [INFO] [launch.py:178:sigkill_handler] Killing subprocess 5362
+[2022-08-31 03:57:42,427] [INFO] [launch.py:178:sigkill_handler] Killing subprocess 5363
+[2022-08-31 03:57:42,428] [INFO] [launch.py:178:sigkill_handler] Killing subprocess 5364
+[2022-08-31 03:57:42,428] [INFO] [launch.py:178:sigkill_handler] Killing subprocess 5365
+[2022-08-31 03:57:42,428] [INFO] [launch.py:178:sigkill_handler] Killing subprocess 5366
+[2022-08-31 03:57:42,431] [ERROR] [launch.py:184:sigkill_handler] ['/root/miniconda3/envs/ds/bin/python', '-u', 'scripts/inference/bloom-ds-inference.py', '--local_rank=7', '--name', '/data/pengjun/model_ckpt/bloom', '--batch_size', '64', '--benchmark'] exits with return code = 1

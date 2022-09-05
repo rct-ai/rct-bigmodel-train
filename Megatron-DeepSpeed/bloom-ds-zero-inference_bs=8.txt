@@ -1,0 +1,375 @@
+[2022-08-31 05:18:16,462] [WARNING] [runner.py:159:fetch_hostfile] Unable to find hostfile, will proceed with training with local resources only.
+[2022-08-31 05:18:17,363] [INFO] [runner.py:457:main] cmd = /root/miniconda3/envs/ds/bin/python -u -m deepspeed.launcher.launch --world_info=eyJsb2NhbGhvc3QiOiBbMCwgMSwgMiwgMywgNCwgNSwgNiwgN119 --master_addr=127.0.0.1 --master_port=29500 scripts/inference/bloom-ds-zero-inference.py --name /data/pengjun/model_ckpt/bloom --batch_size 8 --benchmark
+[2022-08-31 05:18:18,358] [INFO] [launch.py:103:main] WORLD INFO DICT: {'localhost': [0, 1, 2, 3, 4, 5, 6, 7]}
+[2022-08-31 05:18:18,358] [INFO] [launch.py:109:main] nnodes=1, num_local_procs=8, node_rank=0
+[2022-08-31 05:18:18,358] [INFO] [launch.py:122:main] global_rank_mapping=defaultdict(<class 'list'>, {'localhost': [0, 1, 2, 3, 4, 5, 6, 7]})
+[2022-08-31 05:18:18,358] [INFO] [launch.py:123:main] dist_world_size=8
+[2022-08-31 05:18:18,358] [INFO] [launch.py:125:main] Setting CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+*** Loading the model /data/pengjun/model_ckpt/bloom
+[2022-08-31 05:18:20,462] [INFO] [utils.py:827:see_memory_usage] pre-from-pretrained
+[2022-08-31 05:18:20,462] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2022-08-31 05:18:20,463] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 10.94 GB, percent = 1.0%
+[2022-08-31 05:18:20,466] [INFO] [utils.py:827:see_memory_usage] pre-from-pretrained
+[2022-08-31 05:18:20,466] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2022-08-31 05:18:20,466] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 10.94 GB, percent = 1.0%
+[2022-08-31 05:18:20,471] [INFO] [utils.py:827:see_memory_usage] pre-from-pretrained
+[2022-08-31 05:18:20,471] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2022-08-31 05:18:20,472] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 10.94 GB, percent = 1.0%
+[2022-08-31 05:18:20,472] [INFO] [utils.py:827:see_memory_usage] pre-from-pretrained
+[2022-08-31 05:18:20,472] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2022-08-31 05:18:20,472] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 10.94 GB, percent = 1.0%
+[2022-08-31 05:18:20,479] [INFO] [utils.py:827:see_memory_usage] pre-from-pretrained
+[2022-08-31 05:18:20,479] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2022-08-31 05:18:20,479] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 10.94 GB, percent = 1.0%
+[2022-08-31 05:18:20,482] [INFO] [utils.py:827:see_memory_usage] pre-from-pretrained
+[2022-08-31 05:18:20,482] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2022-08-31 05:18:20,483] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 10.94 GB, percent = 1.0%
+[2022-08-31 05:18:20,483] [INFO] [utils.py:827:see_memory_usage] pre-from-pretrained
+[2022-08-31 05:18:20,483] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2022-08-31 05:18:20,484] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 10.94 GB, percent = 1.0%
+[2022-08-31 05:18:20,485] [INFO] [utils.py:827:see_memory_usage] pre-from-pretrained
+[2022-08-31 05:18:20,485] [INFO] [utils.py:828:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2022-08-31 05:18:20,485] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 10.94 GB, percent = 1.0%
+[2022-08-31 05:18:21,535] [INFO] [comm.py:423:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+[2022-08-31 05:18:43,604] [INFO] [partition_parameters.py:437:__exit__] finished initializing model with 179.84B parameters
+[2022-08-31 05:46:00,492] [INFO] [utils.py:827:see_memory_usage] post-from-pretrained
+[2022-08-31 05:46:00,493] [INFO] [utils.py:828:see_memory_usage] MA 41.89 GB         Max_MA 55.29 GB         CA 72.4 GB         Max_CA 77 GB 
+[2022-08-31 05:46:00,493] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 42.59 GB, percent = 3.8%
+{'fp16': {'enabled': False}, 'bf16': {'enabled': True}, 'zero_optimization': {'stage': 3, 'overlap_comm': True, 'contiguous_gradients': True, 'reduce_bucket_size': 205520896, 'stage3_prefetch_bucket_size': 184968806.4, 'stage3_param_persistence_threshold': 0}, 'steps_per_print': 2000, 'train_batch_size': 8, 'train_micro_batch_size_per_gpu': 1, 'wall_clock_breakdown': False}
+[2022-08-31 05:46:00,495] [INFO] [logging.py:69:log_dist] [Rank 0] DeepSpeed info: version=0.7.0+e4a5a464, git-hash=e4a5a464, git-branch=olruwase/elastic-ckpt-refresh
+[2022-08-31 05:46:00,514] [INFO] [engine.py:316:__init__] DeepSpeed Flops Profiler Enabled: False
+[2022-08-31 05:46:00,514] [INFO] [logging.py:69:log_dist] [Rank 0] Creating fp16 ZeRO stage 3 optimizer
+[2022-08-31 05:46:00,516] [INFO] [engine.py:1410:_configure_zero_optimizer] Initializing ZeRO Stage 3
+[2022-08-31 05:46:00,599] [INFO] [utils.py:827:see_memory_usage] TensorOffload initialize beginning
+[2022-08-31 05:46:00,599] [INFO] [utils.py:828:see_memory_usage] MA 41.89 GB         Max_MA 41.89 GB         CA 72.4 GB         Max_CA 72 GB 
+[2022-08-31 05:46:00,599] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 42.69 GB, percent = 3.8%
+[2022-08-31 05:46:00,624] [INFO] [config.py:957:print] DeepSpeedEngine configuration:
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   activation_checkpointing_config  {
+    "partition_activations": false, 
+    "contiguous_memory_optimization": false, 
+    "cpu_checkpointing": false, 
+    "number_checkpoints": null, 
+    "synchronize_checkpoint_boundary": false, 
+    "profile": false
+}
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   aio_config ................... {'block_size': 1048576, 'queue_depth': 8, 'thread_count': 1, 'single_submit': False, 'overlap_events': True}
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   amp_enabled .................. False
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   amp_params ................... False
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   autotuning_config ............ {
+    "enabled": false, 
+    "start_step": null, 
+    "end_step": null, 
+    "metric_path": null, 
+    "arg_mappings": null, 
+    "metric": "throughput", 
+    "model_info": null, 
+    "results_dir": null, 
+    "exps_dir": null, 
+    "overwrite": true, 
+    "fast": true, 
+    "start_profile_step": 3, 
+    "end_profile_step": 5, 
+    "tuner_type": "gridsearch", 
+    "tuner_early_stopping": 5, 
+    "tuner_num_trials": 50, 
+    "model_info_path": null, 
+    "mp_size": 1, 
+    "max_train_batch_size": null, 
+    "min_train_batch_size": 1, 
+    "max_train_micro_batch_size_per_gpu": 1.024000e+03, 
+    "min_train_micro_batch_size_per_gpu": 1, 
+    "num_tuning_micro_batch_sizes": 3
+}
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   bfloat16_enabled ............. True
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   checkpoint_tag_validation_enabled  True
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   checkpoint_tag_validation_fail  False
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   communication_data_type ...... None
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   compression_config ........... {'weight_quantization': {'shared_parameters': {'enabled': False, 'quantizer_kernel': False, 'schedule_offset': 0, 'quantize_groups': 1, 'quantize_verbose': False, 'quantization_type': 'symmetric', 'quantize_weight_in_forward': False, 'rounding': 'nearest', 'fp16_mixed_quantize': False, 'quantize_change_ratio': 0.001}, 'different_groups': {}}, 'activation_quantization': {'shared_parameters': {'enabled': False, 'quantization_type': 'symmetric', 'range_calibration': 'dynamic', 'schedule_offset': 1000}, 'different_groups': {}}, 'sparse_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'row_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'head_pruning': {'shared_parameters': {'enabled': False, 'method': 'topk', 'schedule_offset': 1000}, 'different_groups': {}}, 'channel_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'layer_reduction': {'enabled': False}}
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   curriculum_enabled ........... False
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   curriculum_params ............ False
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   dataloader_drop_last ......... False
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   disable_allgather ............ False
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   dump_state ................... False
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   dynamic_loss_scale_args ...... None
+[2022-08-31 05:46:00,624] [INFO] [config.py:961:print]   eigenvalue_enabled ........... False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   eigenvalue_gas_boundary_resolution  1
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   eigenvalue_layer_name ........ bert.encoder.layer
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   eigenvalue_layer_num ......... 0
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   eigenvalue_max_iter .......... 100
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   eigenvalue_stability ......... 1e-06
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   eigenvalue_tol ............... 0.01
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   eigenvalue_verbose ........... False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   elasticity_enabled ........... False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   flops_profiler_config ........ {
+    "enabled": false, 
+    "profile_step": 1, 
+    "module_depth": -1, 
+    "top_modules": 1, 
+    "detailed": true, 
+    "output_file": null
+}
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   fp16_enabled ................. False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   fp16_master_weights_and_gradients  False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   global_rank .................. 0
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   gradient_accumulation_steps .. 1
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   gradient_clipping ............ 0.0
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   gradient_predivide_factor .... 1.0
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   initial_dynamic_scale ........ 1
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   load_universal_checkpoint .... False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   loss_scale ................... 1.0
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   memory_breakdown ............. False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   monitor_config ............... <deepspeed.monitor.config.DeepSpeedMonitorConfig object at 0x7fb85dc1a040>
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   optimizer_legacy_fusion ...... False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   optimizer_name ............... None
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   optimizer_params ............. None
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   pipeline ..................... {'stages': 'auto', 'partition': 'best', 'seed_layers': False, 'activation_checkpoint_interval': 0}
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   pld_enabled .................. False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   pld_params ................... False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   prescale_gradients ........... False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   scheduler_name ............... None
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   scheduler_params ............. None
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   sparse_attention ............. None
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   sparse_gradients_enabled ..... False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   steps_per_print .............. 2000
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   train_batch_size ............. 8
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   train_micro_batch_size_per_gpu  1
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   wall_clock_breakdown ......... False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   world_size ................... 8
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   zero_allow_untested_optimizer  False
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   zero_config .................. {
+    "stage": 3, 
+    "contiguous_gradients": true, 
+    "reduce_scatter": true, 
+    "reduce_bucket_size": 2.055209e+08, 
+    "allgather_partitions": true, 
+    "allgather_bucket_size": 5.000000e+08, 
+    "overlap_comm": true, 
+    "load_from_fp32_weights": true, 
+    "elastic_checkpoint": false, 
+    "offload_param": null, 
+    "offload_optimizer": null, 
+    "sub_group_size": 1.000000e+09, 
+    "prefetch_bucket_size": 1.849688e+08, 
+    "param_persistence_threshold": 0, 
+    "max_live_parameters": 1.000000e+09, 
+    "max_reuse_distance": 1.000000e+09, 
+    "gather_16bit_weights_on_model_save": false, 
+    "ignore_unused_parameters": true, 
+    "round_robin_gradients": false, 
+    "legacy_stage1": false
+}
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   zero_enabled ................. True
+[2022-08-31 05:46:00,625] [INFO] [config.py:961:print]   zero_optimization_stage ...... 3
+[2022-08-31 05:46:00,625] [INFO] [config.py:963:print]   json = {
+    "fp16": {
+        "enabled": false
+    }, 
+    "bf16": {
+        "enabled": true
+    }, 
+    "zero_optimization": {
+        "stage": 3, 
+        "overlap_comm": true, 
+        "contiguous_gradients": true, 
+        "reduce_bucket_size": 2.055209e+08, 
+        "stage3_prefetch_bucket_size": 1.849688e+08, 
+        "stage3_param_persistence_threshold": 0
+    }, 
+    "steps_per_print": 2.000000e+03, 
+    "train_batch_size": 8, 
+    "train_micro_batch_size_per_gpu": 1, 
+    "wall_clock_breakdown": false, 
+    "compression_training": {
+        "weight_quantization": {
+            "shared_parameters": {
+            }, 
+            "different_groups": {
+            }
+        }, 
+        "activation_quantization": {
+            "shared_parameters": {
+            }, 
+            "different_groups": {
+            }
+        }, 
+        "sparse_pruning": {
+            "shared_parameters": {
+            }, 
+            "different_groups": {
+            }
+        }, 
+        "row_pruning": {
+            "shared_parameters": {
+            }, 
+            "different_groups": {
+            }
+        }, 
+        "head_pruning": {
+            "shared_parameters": {
+            }, 
+            "different_groups": {
+            }
+        }, 
+        "channel_pruning": {
+            "shared_parameters": {
+            }, 
+            "different_groups": {
+            }
+        }
+    }
+}
+Using /root/.cache/torch_extensions/py38_cu113 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu113 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu113 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu113 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu113 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu113 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu113 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu113 as PyTorch extensions root...
+Emitting ninja build file /root/.cache/torch_extensions/py38_cu113/utils/build.ninja...
+Building extension module utils...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+ninja: no work to do.
+Loading extension module utils...
+Loading extension module utils...
+Time to load utils op: 0.6213035583496094 seconds
+Time to load utils op: 0.603966474533081 seconds
+Loading extension module utils...
+Time to load utils op: 0.6023294925689697 seconds
+Loading extension module utils...
+Time to load utils op: 0.6027824878692627 seconds
+Loading extension module utils...
+Time to load utils op: 0.6025495529174805 seconds
+Loading extension module utils...
+*** Starting to generate 100 tokens with bs=8
+Generate args {'max_new_tokens': 100, 'do_sample': False}
+Time to load utils op: 0.6028735637664795 seconds
+Loading extension module utils...
+Time to load utils op: 0.602771520614624 seconds
+Loading extension module utils...
+Time to load utils op: 0.7029130458831787 seconds
+------------------------------------------------------------
+in=DeepSpeed is a machine learning framework
+out=DeepSpeed is a machine learning framework that is designed to be used in a distributed environment. It is written in C++ and is designed to be used in a distributed environment. It is designed to be used in a distributed environment. It is designed to be used in a distributed environment. It is designed to be used in a distributed environment. It is designed to be used in a distributed environment. It is designed to be used in a distributed environment. It is designed to be used in a distributed environment. It is designed to be used in
+
+------------------------------------------------------------
+in=He is working on
+out=He is working on a book about the history of the American West, and he is also working on a book about the history of the American Southwest. He is also working on a book about the history of the American Southwest. He is also working on a book about the history of the American Southwest. He is also working on a book about the history of the American Southwest. He is also working on a book about the history of the American Southwest. He is also working on a book about the
+
+------------------------------------------------------------
+in=He has a
+out=He has a very good point.
+I think we should go.
+- I think we should go.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah.
+- Yeah
+
+------------------------------------------------------------
+in=He got all
+out=He got all the way to the top of the stairs, and then he stopped.
+He was just standing there, looking down at me.
+I could see the fear in his eyes.
+I could see it.
+I could see it.
+I could see it.
+I could see it.
+I could see it.
+I could see it.
+I could see it.
+I could see it.
+I could see it.
+I could see it.
+I could see it.
+I could see it.
+I could see it.
+I
+
+------------------------------------------------------------
+in=Everyone is happy and I can
+out=Everyone is happy and I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can see that.
+I can
+
+------------------------------------------------------------
+in=The new movie that got Oscar this year
+out=The new movie that got Oscar this year is a movie that is based on a true story. The movie is called The Imitation Game. The movie is about Alan Turing, a mathematician who helped the British to win the war against the Germans. The movie is about the life of Alan Turing and how he helped the British to win the war. The movie is about the life of Alan Turing and how he helped the British to win the war. The movie is about the life of Alan Turing and how he helped the British to win the
+
+------------------------------------------------------------
+in=In the far far distance from our galaxy,
+out=In the far far distance from our galaxy, there is a galaxy called Andromeda.
+Andromeda is a spiral galaxy, like our own.
+Andromeda is a spiral galaxy, like our own.
+It is about 2.5 million light years away.
+It is about 2.5 million light years away.
+It is moving towards us at about 600,000 miles per hour.
+It is moving towards us at about 600,000 miles per hour.
+If Andromeda were to collide with our galaxy, it would be the biggest event
+
+------------------------------------------------------------
+in=Peace is the only way
+out=Peace is the only way to solve the problem of Kashmir,” he said, adding that the people of the state have been suffering for the last 70 years.
+“We have been fighting for the last 70 years. We have been fighting for the last 70 years. We have been fighting for the last 70 years. We have been fighting for the last 70 years. We have been fighting for the last 70 years. We have been fighting for the last 70 years. We have been fighting for the last 70 years. We have
+
+[2022-08-31 05:54:07,488] [INFO] [utils.py:827:see_memory_usage] end-of-run
+[2022-08-31 05:54:07,489] [INFO] [utils.py:828:see_memory_usage] MA 41.89 GB         Max_MA 63.31 GB         CA 46.17 GB         Max_CA 77 GB 
+[2022-08-31 05:54:07,489] [INFO] [utils.py:836:see_memory_usage] CPU Virtual Memory:  used = 42.55 GB, percent = 3.8%
+*** Running benchmark
+
+*** Performance stats:
+Throughput per token including tokenize: 37.38 msecs
+Start to ready to generate: 1661.964 secs
+Tokenize and generate 32000 (bs=8) tokens: 239.084 secs
+Start to finish: 1901.048 secs
+
+[2022-08-31 06:18:10,451] [INFO] [launch.py:210:main] Process 17858 exits successfully.
+[2022-08-31 06:18:12,454] [INFO] [launch.py:210:main] Process 17855 exits successfully.
+[2022-08-31 06:18:12,454] [INFO] [launch.py:210:main] Process 17856 exits successfully.
+[2022-08-31 06:18:13,455] [INFO] [launch.py:210:main] Process 17851 exits successfully.
+[2022-08-31 06:18:14,456] [INFO] [launch.py:210:main] Process 17854 exits successfully.
+[2022-08-31 06:18:15,457] [INFO] [launch.py:210:main] Process 17853 exits successfully.
+[2022-08-31 06:18:15,457] [INFO] [launch.py:210:main] Process 17857 exits successfully.
+[2022-08-31 06:18:16,459] [INFO] [launch.py:210:main] Process 17852 exits successfully.

@@ -125,6 +125,7 @@ OUTPUT_ARGS=" \
     --log-timers-to-tensorboard \
     --log-batch-size-to-tensorboard \
     --log-validation-ppl-to-tensorboard \
+    --skip-train-iteration-range 1-3673 \
     "
 
 ZERO_STAGE=0 # important: bf16 must use z0! it implements its own zero stage 1 equivalent
