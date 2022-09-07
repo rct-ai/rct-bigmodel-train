@@ -10,7 +10,7 @@ export TRANSFORMERS_OFFLINE=1
 
 variant=main
 DATA_OUTPUT_PATH=/data/pengjun/Megatron-DeepSpeed/checkpoints/tr11b-7B1-ml
-CHECKPOINT_PATH=$DATA_OUTPUT_PATH/checkpoints/main
+CHECKPOINT_PATH=$DATA_OUTPUT_PATH/checkpoints/main2
 REPO_PATH=$DATA_OUTPUT_PATH/tr11f-7B1-ml-logs
 TENSORBOARD_PATH=$REPO_PATH/tensorboard/$variant
 LOGS_PATH=$REPO_PATH/logs/$variant
@@ -115,7 +115,7 @@ OUTPUT_ARGS=" \
     --log-validation-ppl-to-tensorboard \
     "
 
-ZERO_STAGE=3 # important: bf16 must use z0! it implements its own zero stage 1 equivalent
+ZERO_STAGE=1 # important: bf16 must use z0! it implements its own zero stage 1 equivalent
 
 config_json="./ds_config_1.json"
 
@@ -126,11 +126,7 @@ cat <<EOT > $config_json
   "train_batch_size": $GLOBAL_BATCH_SIZE,
   "gradient_clipping": 1.0,
   "zero_optimization": {
-        "stage": 3,
-        "overlap_comm": true,
-        "contiguous_gradients": true,
-        "sub_group_size": 1e14,
-        "stage3_gather_fp16_weights_on_model_save": true
+        "stage": 1
   },
   "fp16": {
     "enabled": true,
@@ -169,7 +165,8 @@ export CMD=" \
     $GPT_ARGS \
     $OUTPUT_ARGS \
     --save $CHECKPOINT_PATH \
-    --load $CHECKPOINT_PATH \
+    --load /data/pengjun/model_ckpt/bloom-7b1-optimizer-states \
+    --no-load-optim \
     --train-weighted-split-paths-path $TRAIN_DATA_PATH \
     --valid-weighted-split-paths-path $VALID_DATA_PATH \
     --data-impl mmap \

@@ -24,6 +24,7 @@ params={
     "1B7":{"model_params":"1B7","GPUS_PER_NODE":"2","NNODES":"1","PP_SIZE":"2","TP_SIZE":"2","NLAYERS":"24","NHIDDEN":"2048","NHEADS":"16","SEQ_LEN":"2048"},
     "3B":{"model_params":"3B","GPUS_PER_NODE":"4","NNODES":"1","PP_SIZE":"4","TP_SIZE":"4","NLAYERS":"30","NHIDDEN":"2560","NHEADS":"32","SEQ_LEN":"2048"}
 }
+CHECK_POINT_DIR="/data/pengjun/Megatron-DeepSpeed/checkpoints"
 
 all_popen={
 
@@ -137,7 +138,7 @@ def upload_img():
             insert_config_json(data_name)
 
             convert_jsonl_meg(data_name)
-            return jsonify({"status":"success","message":"upload success"}),200
+            return jsonify({"status":"success","message":"upload success,data is processing,please wait and check it in 2mins"}),200
 
         else:
             return jsonify({"error":out,"status":'failed'}),500
@@ -147,7 +148,7 @@ def upload_img():
         data.save(f"upload_data/{data_name}.jsonl")
         insert_config_json(data_name)
         convert_jsonl_meg(data_name)
-        return jsonify({"status": "success", "message": "upload success"}), 200
+        return jsonify({"status": "success", "message": "upload success,data is processing,please wait and check it in 2mins"}), 200
 
 @app.route("/task/get", methods=["GET"])
 def get_status():
@@ -170,6 +171,21 @@ def get_all_status():
     all_keys=list(all_popen.keys())
     return jsonify({"tasks":all_keys}),200
 
+@app.route("/model/convert", methods=["POST"])
+def model_convert():
+    data_name = request.form.get("data_name","test")
+    model_params = request.form.get("model_params", "1B7")
+    model_path= os.path.join(CHECK_POINT_DIR,f"tr11b-{model_params}-ml","checkpoints",data_name)
+    model_save_path=os.path.join(CHECK_POINT_DIR,"hf_checkpoints",f"tr11b-{model_params}-ml",data_name)
+    pretraining_tp=params.get(model_params).get("TP_SIZE")
+    with open(os.path.join(model_path,"latest"),"r") as f:
+        globel_latest=f.read().rstrip("\n")
+        print(globel_latest)
+    model_path=os.path.join(model_path,globel_latest)
+    cmd=f" python tools/convert_checkpoint/convert_megatron_transformers.py --bloom_checkpoint_path {model_path}  --pytorch_dump_folder_path {model_save_path} --pretraining_tp {pretraining_tp} --bloom_config_file /data/pengjun/Megatron-DeepSpeed/preprocess_data/model_config/config-{model_params.lower()}.json"
+    print(cmd)
+    popen = subprocess.Popen(cmd, shell=True)
+    return jsonify({"message":'checkpoints is converting ,please check it in 2 minutes',"status":"success"})
 
 
 def convert_text_to_json(data,data_name):
@@ -190,7 +206,8 @@ def convert_text_to_json(data,data_name):
         return str(e)
 
 def convert_jsonl_meg(data_name):
-    cmd=f"python tools/preprocess_data.py  --input  upload_data/{data_name}.jsonl --output-prefix preprocess_data/{data_name}  --vocab data/gpt2-vocab.json  --merge-file data/gpt2-merges.txt  --dataset-impl mmap  --tokenizer-type GPT2BPETokenizer  --append-eod  --workers 16"
+    cmd=f"python tools/preprocess_data.py  --input  upload_data/{data_name}.jsonl --output-prefix preprocess_data/{data_name}  --vocab data/gpt2-vocab.json  --merge-file data/gpt2-merges.txt  --dataset-impl mmap  --tokenizer-type PretrainedFromHF  --tokenizer-name-or-path /data/pengjun/Megatron-DeepSpeed/byte-level-bpe-tokenizer-no-norm-250k-whitespace-and-eos-regex-alpha-v3-dedup-lines-articles --append-eod  --workers 16"
+    print(cmd)
     popen = subprocess.Popen(cmd, shell=True)
 
 def shuffle_data(data_name):
